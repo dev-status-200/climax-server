@@ -1,4 +1,4 @@
-const { SE_Job, SE_Equipments, Container_Info, Bl, Stamps } = require("../../functions/Associations/jobAssociations/seaExport");
+const { SE_Job, SE_Equipments, Container_Info, Bl, Stamps, Loading_Program } = require("../../functions/Associations/jobAssociations/seaExport");
 // const {Bl, Stamps} = require("../../functions/Associations/stamps")
 const { Employees } = require("../../functions/Associations/employeeAssociations");
 const { Vendors } = require("../../functions/Associations/vendorAssociations");
@@ -438,6 +438,28 @@ routes.get("/getStamps", async(req, res) => {
         const result = await Stamps.findAll({
             where:{BlId:req.headers.id},
         });
+        res.json({status:'success', result:result});
+    }
+    catch (error) {
+      res.json({status:'error', result:error});
+    }
+}); 
+
+routes.get("/getLoadingProgram", async(req, res) => {
+    try {
+        const result = await Loading_Program.findOne({
+            where:{SEJobId:req.headers.id},
+        });
+        res.json({status:'success', result:result});
+    }
+    catch (error) {
+      res.json({status:'error', result:error});
+    }
+}); 
+
+routes.post("/upsertLoadingProgram", async(req, res) => {
+    try {
+        const result = await Loading_Program.upsert(req.body);
         res.json({status:'success', result:result});
     }
     catch (error) {

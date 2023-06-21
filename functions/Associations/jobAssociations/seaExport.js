@@ -1,4 +1,4 @@
-const { SE_Job, SE_Equipments, Commodity, Bl, Container_Info, Vessel, Stamps } = require("../../../models");
+const { SE_Job, SE_Equipments, Commodity, Bl, Container_Info, Vessel, Stamps, Loading_Program } = require("../../../models");
 const { Employees } = require("../employeeAssociations");
 const { Vendors } = require("../vendorAssociations");
 const { Clients } = require("../clientAssociation");
@@ -38,6 +38,14 @@ SE_Job.hasOne(Bl, {
 });
 Bl.belongsTo(SE_Job);
 
+SE_Job.hasOne(Loading_Program, {
+    foriegnKey:{
+        type: DataTypes.UUID,
+        allowNull:false
+    }
+});
+Loading_Program.belongsTo(SE_Job);
+
 Voyage.hasOne(SE_Job, {
     foriegnKey:{
         type: DataTypes.UUID,
@@ -74,4 +82,4 @@ SE_Job.belongsTo(Vendors,  {as:'shipping_line'      });
 SE_Job.belongsTo(Clients,  {as:'shipper'            });
 SE_Job.belongsTo(Clients,  {as:'consignee'          });
 
-module.exports = { SE_Equipments, SE_Job, Bl, Container_Info, Stamps }
+module.exports = { SE_Equipments, SE_Job, Bl, Container_Info, Stamps, Loading_Program }
