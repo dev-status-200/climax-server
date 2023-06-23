@@ -1,6 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Loading_Program = sequelize.define("Loading_Program", {
         localCustom:        { type:DataTypes.STRING },
+        wharf:              { type:DataTypes.STRING },
         loadingTerminal:    { type:DataTypes.STRING },
         dischargeTerminal:  { type:DataTypes.STRING },
         loadingDate:        { type:DataTypes.STRING },
@@ -30,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         containerSplit:     { type:DataTypes.STRING },
         blRequired:         { type:DataTypes.STRING },
         containerWt:        { type:DataTypes.STRING },
+        containerPickup:    { type:DataTypes.STRING },
         containerTemp:      { type:DataTypes.STRING },
         vent:               { type:DataTypes.STRING },
         loadingTerms:       { type:DataTypes.TEXT('long') }

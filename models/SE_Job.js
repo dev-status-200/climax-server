@@ -45,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         terminal: { type:DataTypes.STRING },
         delivery: { type:DataTypes.STRING },
         companyId: { type:DataTypes.STRING },
+        pkgUnit: { type:DataTypes.STRING },
         exRate: { 
             type:DataTypes.STRING,
             defaultValue: "1"

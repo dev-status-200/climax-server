@@ -459,7 +459,8 @@ routes.get("/getLoadingProgram", async(req, res) => {
 
 routes.post("/upsertLoadingProgram", async(req, res) => {
     try {
-        const result = await Loading_Program.upsert(req.body);
+        const result = await Loading_Program.upsert(req.body)
+        .catch((x)=>console.log(x))
         res.json({status:'success', result:result});
     }
     catch (error) {
