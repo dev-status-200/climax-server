@@ -7,19 +7,12 @@ const { Voyage } = require('../../functions/Associations/vesselAssociations');
 
 routes.post("/create", async(req, res) => {
     try {
-      const exists = await Vessel.findOne({
-        where: {
-        [Op.or]: [
-          {name:Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')),'LIKE','%'+req.body.data.name.toLowerCase() + '%')},
-          {code:req.body.data.code}
-        ]}
-      });
-      if(exists){
-        res.json({status:'exists'});
-      } else {
-        const result = await Vessel.create(req.body.data);
+      const value = req.body.data;
+      const check = await Vessel.max("code")
+
+        const result = await Vessel.create({...value, code:parseInt(check) + 1});
         res.json({status:'success', result:result});
-      }
+      
     }
     catch (error) {
       res.json({status:'error', result:error});
@@ -93,6 +86,7 @@ routes.get("/get", async(req, res) => {
 
 routes.post("/edit", async(req, res) => {
     try {
+      const value = req.body.data
       const exists = await Vessel.findOne({
         where:{
             id:{ [Op.ne]: req.body.data.id },
@@ -102,7 +96,7 @@ routes.post("/edit", async(req, res) => {
       if(exists){
           res.json({status:'exists', result:exists});
       } else {
-          await Vessel.update(req.body.data,{
+          await Vessel.update( {...value, code : parseInt(value.code)},{
             where:{id:req.body.data.id}
           });
           const result = await Vessel.findOne({where:{id:req.body.data.id}})

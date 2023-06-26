@@ -5,18 +5,20 @@ const Op = Sequelize.Op;
 
 routes.post("/create", async(req, res) => {
     try {
-        console.log(req.body.data)
+        // console.log(req.body.data)
         let data = req.body.data
         delete data.id
-        const exists = await Charges.findOne({
-            where:{code:data.code}
-        });
-        if(exists){
-            res.json({status:'exists'});
-        } else {
-            const result = await Charges.create(data);
-            res.json({status:'success', result:result})
-        }
+        const check = await Charges.max("code")
+        console.log(check)
+        // const exists = await Charges.findOne({
+        //     where:{code:data.code}
+        // });
+        // if(exists){
+        //     res.json({status:'exists'});
+        // } else {
+            const result = await Charges.create({...data, code: parseInt(check) + 1});
+            res.json({status:'success', result:result })
+        // }
     }
     catch (error) {
       res.json({status:'error', result:error});
