@@ -13,6 +13,7 @@ const routes = require('express').Router();
 const Sequelize = require('sequelize');
 const moment = require("moment");
 const Op = Sequelize.Op;
+const numCPUs = require('os').cpus().length;
 
 // Invoice statuses
 // 1 = unpaid
@@ -157,6 +158,22 @@ routes.get("/getJobInvoices", async(req, res) => {
       }]
     })
     res.json({status:'success', result:result});
+    }
+    catch (error) {
+      res.json({status:'error', result:error});
+    }
+});
+
+routes.get("/getFilteredInvoices", async(req, res) => {
+  try {
+    console.log(numCPUs)
+    // const result = await Invoice.findAll({
+    //   where:{type:req.headers.type},
+    //   include:[{
+    //     model:Charge_Head,
+    //   }]
+    // })
+    res.json({status:'success', result:numCPUs});
     }
     catch (error) {
       res.json({status:'error', result:error});

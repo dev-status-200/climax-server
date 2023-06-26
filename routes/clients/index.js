@@ -86,7 +86,6 @@ routes.post("/editClient", async(req, res) => {
         return result;
     }
     try {
-        
         let value = req.body.data;
         value.id = value.id
         value.operations = value.operations.join(', ');
@@ -122,7 +121,7 @@ routes.post("/editClient", async(req, res) => {
 routes.get("/getClients", async(req, res) => {
     try {
         const result = await Clients.findAll({
-            include:[{
+            include:[{  
                 model:Client_Associations
             }],
             order: [['createdAt', 'DESC'], /* ['name', 'ASC'],*/] 
