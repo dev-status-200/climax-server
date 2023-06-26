@@ -38,7 +38,8 @@ routes.post("/create", async(req, res) => {
 
         let parentAccountList = [{id:3, CompanyId:1}, {id:4, CompanyId:2}, {id:7, CompanyId:3},{id:2, CompanyId:1}, {id:5, CompanyId:2}, {id:6, CompanyId:3}]
         delete value.id;
-        const result = await Vendors.create(value).catch((x)=>console.log(x))
+        const check = await Vendors.max('code');
+        const result = await Vendors.create({...value, code: parseInt(check) + 1})//.catch((x)=>console.log(x))
         const accounts = await Parent_Account.findAll({
             where: {
                 CompanyId: {[Op.or]:[1, 2, 3]},
@@ -54,7 +55,7 @@ routes.post("/create", async(req, res) => {
             where:{id:result.id},
             include:[{ model:Vendor_Associations }]
         });
-        res.json({status:'success', result:finalResult});
+        res.json({status:'success', result: finalResult});
     }
     catch (error) {
       res.json({status:'error', result:error});
@@ -66,7 +67,7 @@ routes.post("/edit", async(req, res) => {
         let value = req.body.data;
         value.operations = value.operations.join(', ');
         value.types = value.types.join(', ');
-        await Vendors.update(value,{where:{id:value.id}}).catch((x)=>console.log(x))
+        await Vendors.update({...value, code: parseInt(value.code)},{where:{id:value.id}})//.catch((x)=>console.log(x))
         await History.create({
             html:req.body.history, EmployeeId:req.body.EmployeeId, updateDate:req.body.updateDate,
             recordId:value.id, type:"vendor"

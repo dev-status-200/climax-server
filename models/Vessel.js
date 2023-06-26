@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Vessel = sequelize.define("Vessel", {
         code:{
-            type:DataTypes.STRING,
+            type:DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty: true

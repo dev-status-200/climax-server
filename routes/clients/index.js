@@ -36,7 +36,9 @@ routes.post("/createClient", async(req, res) => {
         value.operations = value.operations.join(', ');
         value.types = value.types.join(', ');
         delete value.id
-        const result = await Clients.create(value)//.catch((x)=>console.log(x))
+        const check = await Clients.max('code');
+
+        const result = await Clients.create({...value, code : parseInt(check) + 1 })//.catch((x)=>console.log(x))
         const accounts = await Parent_Account.findAll({
             where: {
                 CompanyId: { [Op.or]: value.companies },
@@ -52,7 +54,7 @@ routes.post("/createClient", async(req, res) => {
                 model:Client_Associations
             }]
         });
-        res.json({status:'success', result:finalResult});
+        res.json({status:'success', result:   finalResult});
     }
     catch (error) {
       res.json({status:'error', result:error});
@@ -90,7 +92,7 @@ routes.post("/editClient", async(req, res) => {
         value.id = value.id
         value.operations = value.operations.join(', ');
         value.types = value.types.join(', ');
-        const result = await Clients.update(value,{where:{id:value.id}}).catch((x)=>console.log(1))
+        const result = await Clients.update({...value, code: parseInt(value.code)},{where:{id:value.id}}).catch((x)=>console.log(1))
         if(value.companies.length>0){
             const accounts = await Parent_Account.findAll({
                 where: {
