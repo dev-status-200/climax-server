@@ -172,6 +172,11 @@ routes.get("/getFilteredInvoices", async(req, res) => {
       include:[{
         model:SE_Job,
         attributes:['jobNo']
+      }],
+      include:[{
+        model:Charge_Head,
+        attributes:['charge'],
+        where:{charge:{ [Op.ne]: null }}
       }]
     })
     res.json({status:'success', result:result});
@@ -383,7 +388,10 @@ routes.post("/saveHeadesNew", async(req, res) => {
 
 routes.get("/getHeadesNew", async(req, res) => {
   try {
-    const result = await Charge_Head.findAll({where:{SEJobId:req.headers.id}})
+    const result = await Charge_Head.findAll({
+      where:{SEJobId:req.headers.id},
+      include:[{model:Invoice, attributes:['status']}]
+    })
     res.json({status:'success', result});
   }
   catch (error) {
