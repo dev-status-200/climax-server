@@ -12,6 +12,7 @@ const { Accounts, Vessel } = require("../../models");
 const routes = require('express').Router();
 const Sequelize = require('sequelize');
 const moment = require("moment");
+const { Router } = require("express");
 const Op = Sequelize.Op;
 
 // Invoice statuses
@@ -445,4 +446,15 @@ routes.post("/makeInvoiceNew", async(req, res) => {
   }
 });
 
-module.exports = routes;
+  
+routes.get("/getInvoices", async(req, res) =>{
+  try {
+  const result = await Invoice.findAll({where : {SEJobId : req.headers.id}, attributes : ['invoice_No', "id"]})//.catch((x) => console.log(x))
+  res.json({status: 'success', result: result});
+    
+}
+catch (error) {
+  res.json({status: 'error', result: error});
+}
+})
+module.exports = routes;        
