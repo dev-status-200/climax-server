@@ -3,7 +3,7 @@ const { Vouchers, Voucher_Heads } = require("../../functions/Associations/vouche
 const { Charge_Head, Invoice, Invoice_Losses } = require("../../functions/Associations/incoiceAssociations");
 const { Vendor_Associations } = require("../../functions/Associations/vendorAssociations");
 const { Client_Associations } = require("../../functions/Associations/clientAssociation");
-const { SE_Job, SE_Equipments } = require("../../functions/Associations/jobAssociations/seaExport");
+const { SE_Job, SE_Equipments, Bl } = require("../../functions/Associations/jobAssociations/seaExport");
 const { Vendors } = require("../../functions/Associations/vendorAssociations");
 const { Clients }=require("../../functions/Associations/clientAssociation");
 const { Access_Levels, Employees } = require("../../functions/Associations/employeeAssociations")
@@ -204,6 +204,8 @@ routes.get("/getInvoiceByNo", async(req, res) => {
           ],
           //attributes:['id'],
           include:[
+            { model:Bl , attributes:['mbl', 'hbl'] },
+            { model:Voyage , attributes:['voyage', 'importArrivalDate', 'exportSailDate'] },
             { model:Clients, attributes:attr },
             { model:Clients, as:'consignee', attributes:attr },
             { model:Clients, as:'shipper', attributes:attr },
@@ -472,15 +474,22 @@ routes.post("/makeInvoiceNew", async(req, res) => {
   }
 });
 
-  
 routes.get("/getInvoices", async(req, res) =>{
   try {
-  const result = await Invoice.findAll({where : {SEJobId : req.headers.id}, attributes : ['invoice_No', "id"]})//.catch((x) => console.log(x))
-  res.json({status: 'success', result: result});
-    
-}
-catch (error) {
-  res.json({status: 'error', result: error});
-}
+    const result = await Invoice.findAll({
+      where: {SEJobId: req.headers.id},
+      attributes: ['invoice_No'],
+      include:[{
+        model:Charge_Head,
+        attributes:['charge'],
+        where:{charge:{ [Op.ne]: null }}
+      }]
+    })
+    res.json({status: 'success', result: result});
+      
+  }
+  catch (error) {
+    res.json({status: 'error', result: error});
+  }
 })
 module.exports = routes;        

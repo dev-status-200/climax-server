@@ -8,11 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         carrier:{
-            type:DataTypes.STRING,
-            allowNull: false,
-            validate:{
-                notEmpty: true
-            }
+            type:DataTypes.STRING
         },
         name:{
             type:DataTypes.STRING,

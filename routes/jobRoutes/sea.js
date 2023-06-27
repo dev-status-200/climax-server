@@ -319,7 +319,10 @@ routes.post("/createBl", async(req, res) => {
     try {
         let data = req.body;
         delete data.id
-        const result = await Bl.create(data).catch((x)=>console.log(x))
+        const check = await Bl.findOne({order: [ [ 'no', 'DESC' ]], attributes:["no"]})
+        const result = await Bl.create({...data, 
+            no:check==null?1:parseInt(check.no)+1, hbl:`SNSL${check==null?1:parseInt(check.no)+1}`
+        }).catch((x)=>console.log(x))
         await data.Container_Infos.forEach((x, i)=>{
             data.Container_Infos[i] = {...x, BlId:result.id}
         })
