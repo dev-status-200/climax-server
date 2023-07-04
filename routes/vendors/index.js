@@ -39,7 +39,9 @@ routes.post("/create", async(req, res) => {
         let parentAccountList = [{id:3, CompanyId:1}, {id:4, CompanyId:2}, {id:7, CompanyId:3},{id:2, CompanyId:1}, {id:5, CompanyId:2}, {id:6, CompanyId:3}]
         delete value.id;
         const check = await Vendors.max('code');
-        const result = await Vendors.create({...value, code: parseInt(check) + 1})//.catch((x)=>console.log(x))
+        value.accountRepresentatorId = value.accountRepresentatorId==""?null:value.accountRepresentatorId;
+        value.authorizedById = value.authorizedById==""?null:value.authorizedById;
+        const result = await Vendors.create({...value, code: parseInt(check) + 1});//.catch((x)=>console.log(x))
         const accounts = await Parent_Account.findAll({
             where: {
                 CompanyId: {[Op.or]:[1, 2, 3]},
@@ -47,8 +49,6 @@ routes.post("/create", async(req, res) => {
             }
         });
         const accountsList = await Child_Account.bulkCreate(createChildAccounts(accounts, result.name));
-        console.log(accountsList);
-        console.log(createAccountList(parentAccountList, accountsList, result.id));
         await Vendor_Associations.bulkCreate(createAccountList(parentAccountList, accountsList, result.id));
 
         const finalResult = await Vendors.findOne({
@@ -86,10 +86,25 @@ routes.post("/edit", async(req, res) => {
 routes.get("/get", async(req, res) => {
     try {
         const result = await Vendors.findAll({
-            include:[{
-                model:Vendor_Associations
-            }],
+            // include:[{
+            //     model:Vendor_Associations
+            // }],
             order: [['createdAt', 'DESC'], /* ['name', 'ASC'],*/] 
+        });
+        res.json({status:'success', result:result});
+    }
+    catch (error) {
+      res.json({status:'error', result:error});
+    }
+});
+
+routes.get("/getVendorById", async(req, res) => {
+    try {
+        const result = await Vendors.findOne({
+            where:{id:req.headers.id},
+            include:[{  
+                model:Vendor_Associations
+            }]
         });
         res.json({status:'success', result:result});
     }

@@ -156,7 +156,9 @@ routes.get("/getAccountActivity", async (req, res) => {
 
 routes.get("/getAllVouchers", async (req, res) => {
   try {
-    const result = await Vouchers.findAll();
+    const result = await Vouchers.findAll({
+      order: [["createdAt", "DESC"]],
+    });
     await res.json({ status: "success", result: result });
   } catch (error) {
     res.json({ status: "error", result: error });

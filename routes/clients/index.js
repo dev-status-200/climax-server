@@ -37,8 +37,11 @@ routes.post("/createClient", async(req, res) => {
         value.types = value.types.join(', ');
         delete value.id
         const check = await Clients.max('code');
-
-        const result = await Clients.create({...value, code : parseInt(check) + 1 })//.catch((x)=>console.log(x))
+        value.accountRepresentatorId = value.accountRepresentatorId==""?null:value.accountRepresentatorId;
+        value.salesRepresentatorId = value.salesRepresentatorId==""?null:value.salesRepresentatorId;
+        value.docRepresentatorId = value.docRepresentatorId==""?null:value.docRepresentatorId;
+        value.authorizedById = value.authorizedById==""?null:value.authorizedById;
+        const result = await Clients.create({...value, code : parseInt(check) + 1 }).catch((x)=>console.log(x))
         const accounts = await Parent_Account.findAll({
             where: {
                 CompanyId: { [Op.or]: value.companies },
@@ -123,10 +126,23 @@ routes.post("/editClient", async(req, res) => {
 routes.get("/getClients", async(req, res) => {
     try {
         const result = await Clients.findAll({
+            attributes:['id', 'name' , 'person1', 'mobile1', 'person2', 'mobile2', 'telephone1', 'telephone2', 'address1', 'address2', 'createdBy'],
+            order: [['createdAt', 'DESC'], /* ['name', 'ASC'],*/] 
+        });
+        res.json({status:'success', result:result});
+    }
+    catch (error) {
+      res.json({status:'error', result:error});
+    }
+});
+
+routes.get("/getClientById", async(req, res) => {
+    try {
+        const result = await Clients.findOne({
+            where:{id:req.headers.id},
             include:[{  
                 model:Client_Associations
-            }],
-            order: [['createdAt', 'DESC'], /* ['name', 'ASC'],*/] 
+            }]
         });
         res.json({status:'success', result:result});
     }
