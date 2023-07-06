@@ -24,16 +24,19 @@ const homeAccountRoutes = require('./routes/home/accounts');
 const homeOperationsRoutes = require('./routes/home/operations');
 const miscPartiesRoutes = require('./routes/misc/parties');
 const miscProfitLossRoutes = require('./routes/misc/profitLoss');
+const notificationRoutes = require('./routes/notifications');
 
-const { SE_Equipments, SE_Job, Container_Info, Bl, Stamps } = require('./functions/Associations/jobAssociations/seaExport');
+const { SE_Equipments, SE_Job, Container_Info, Bl, Stamps, Job_notes } = require('./functions/Associations/jobAssociations/seaExport');
 const { Vendors, Vendor_Associations } = require('./functions/Associations/vendorAssociations');
 const {Clients, Client_Associations} = require('./functions/Associations/clientAssociation');
 const {Vouchers, Voucher_Heads} = require('./functions/Associations/voucherAssociations');
 const { Voyage } = require('./functions/Associations/vesselAssociations');
+const { Notifications } = require('./functions/Associations/NotificationAssociation');
+
 // const {Bl, Stamps} = require("./functions/Associations/stamps")
 
 app.use(morgan('tiny'));
-app.use(cors());
+app.use(cors()); 
 
 app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 app.use(bodyParser.json({limit: '100mb', extended: true}));
@@ -47,7 +50,7 @@ app.use("/employeeRoutes", employeeRoutes);
 app.use("/clientRoutes", clientRoutes);
 app.use("/commodity", commodityRoutes);
 app.use("/companies", companyRoutes);
-app.use("/accounts", accountRoutes);
+app.use("/accounts", accountRoutes);  
 app.use("/authRoutes", authRoutes);
 app.use("/history", historyRoutes);
 app.use("/charges", chargesRoutes);
@@ -56,6 +59,7 @@ app.use("/vessel", vesselRoutes);
 app.use("/vendor", vendorRoutes);
 app.use("/seaJob", seaJobRoutes);
 app.use("/voucher", voucherRoutes);
+app.use("/notifications", notificationRoutes);
 app.use("/misc", miscPartiesRoutes, miscProfitLossRoutes);
 
 // abdullah added a new feature

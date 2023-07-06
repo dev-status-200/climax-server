@@ -1,12 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Job_notes = sequelize.define("Job_notes", {
-        recordId:{
-            type:DataTypes.STRING,
-            allowNull: false,
-            validate:{
-                notEmpty: true
-            }
-        },
+    
         type:{
             type:DataTypes.STRING,
             allowNull: false,
@@ -35,6 +29,16 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: true
             }
         },
+        editBy :{
+        type:DataTypes.STRING
+        },
+        opened :{
+            type : DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty: true
+            }
+        } 
     })
     return Job_notes;
 }
