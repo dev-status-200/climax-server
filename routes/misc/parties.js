@@ -1,7 +1,7 @@
 
 const routes = require('express').Router();
 const Sequelize = require('sequelize');
-const { Invoice } = require("../../functions/Associations/incoiceAssociations");
+const { Invoice, Charge_Head } = require("../../functions/Associations/incoiceAssociations");
 const { SE_Job, SE_Equipments } = require("../../functions/Associations/jobAssociations/seaExport");
 const { Clients } = require("../../functions/Associations/clientAssociation");
 const { Vendors } = require("../../functions/Associations/vendorAssociations");
@@ -140,10 +140,15 @@ routes.post(`/${url}/getJobBalanceNew`, async(req, res) => {
               model:SE_Equipments,
               attributes:['qty', 'size']
             }]
+          },
+          {
+            model:Charge_Head,
+            attributes:['id'],
+            where:{},
           }
         ],
       }).catch((x)=>console.log(x));
-    }else {
+    } else {
       result = await Invoice.findAll({
         where:{
           payType:req.body.payType,
@@ -163,6 +168,11 @@ routes.post(`/${url}/getJobBalanceNew`, async(req, res) => {
               model:SE_Equipments,
               attributes:['qty', 'size']
             }]
+          },
+          {
+            model:Charge_Head,
+            attributes:['id'],
+            where:{},
           }
         ],
       }).catch((x)=>console.log(x));

@@ -103,6 +103,19 @@ routes.get("/getEmployees", async(req, res) => {
     }
 });
 
+routes.get("/getEmployeesIdAndName", async(req, res) => {
+    try {
+        const result = await Employees.findAll({
+         where:{active:'1'},
+         attributes:[['id', 'value'], ['name', 'label']]
+        })
+        res.json({status:'success', result:result});
+    }
+    catch (error) {
+      res.json({status:'error', result:error});
+    }
+});
+
 routes.get("/getRepresentativeEmployees", async(req, res) => {
     try {
         const Sr = await Employees.findAll({where:{represent: {[Op.substring]: 'sr'} }, attributes:['id', 'name']});

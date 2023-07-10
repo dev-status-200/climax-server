@@ -1,18 +1,18 @@
-const { Child_Account, Parent_Account } = require("../../functions/Associations/accountAssociations");
-const { Vouchers, Voucher_Heads } = require("../../functions/Associations/voucherAssociations");
 const { Charge_Head, Invoice, Invoice_Losses } = require("../../functions/Associations/incoiceAssociations");
+const { SE_Job, SE_Equipments, Bl } = require("../../functions/Associations/jobAssociations/seaExport");
+const { Child_Account, Parent_Account } = require("../../functions/Associations/accountAssociations");
+const { Access_Levels, Employees } = require("../../functions/Associations/employeeAssociations");
+const { Vouchers, Voucher_Heads } = require("../../functions/Associations/voucherAssociations");
 const { Vendor_Associations } = require("../../functions/Associations/vendorAssociations");
 const { Client_Associations } = require("../../functions/Associations/clientAssociation");
-const { SE_Job, SE_Equipments, Bl } = require("../../functions/Associations/jobAssociations/seaExport");
 const { Vendors } = require("../../functions/Associations/vendorAssociations");
-const { Clients }=require("../../functions/Associations/clientAssociation");
-const { Access_Levels, Employees } = require("../../functions/Associations/employeeAssociations")
 const { Voyage } = require('../../functions/Associations/vesselAssociations');
+const { Clients }=require("../../functions/Associations/clientAssociation");
 const { Accounts, Vessel } = require("../../models");
 const routes = require('express').Router();
 const Sequelize = require('sequelize');
-const moment = require("moment");
 const { Router } = require("express");
+const moment = require("moment");
 const Op = Sequelize.Op;
 //const numCPUs = require('os').cpus().length;
 
@@ -169,12 +169,10 @@ routes.get("/getFilteredInvoices", async(req, res) => {
   try {
     const result = await Invoice.findAll({
       where:{type:req.headers.type},
-      attributes:['id', 'invoice_No', 'status', 'operation', 'currency', 'ex_rate', 'party_Name', 'total', 'partyType'],
-      include:[{
-        model:SE_Job,
-        attributes:['jobNo']
-      }],
-      include:[{
+      attributes:['id', 'invoice_No', 'status', 'operation', 'currency', 'ex_rate', 'party_Name', 'total', 'partyType', 'approved'],
+      include:[
+      { model:SE_Job, attributes:['jobNo'] },
+      {
         model:Charge_Head,
         attributes:['charge'],
         where:{charge:{ [Op.ne]: null }}
@@ -393,7 +391,7 @@ routes.get("/getHeadesNew", async(req, res) => {
   try {
     const result = await Charge_Head.findAll({
       where:{SEJobId:req.headers.id},
-      include:[{model:Invoice, attributes:['status']}]
+      include:[{model:Invoice, attributes:['status', 'approved']}]
     })
     res.json({status:'success', result});
   }

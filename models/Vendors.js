@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Vendors = sequelize.define("Vendors", {
-        code: { type:DataTypes.INTEGER },
+        code: { type:DataTypes.STRING },
         name: { type:DataTypes.STRING },
         city: { type:DataTypes.STRING },
         zip: { type:DataTypes.STRING },

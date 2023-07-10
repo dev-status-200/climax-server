@@ -3,6 +3,8 @@ module.exports = (sequelize, DataTypes) => {
         jobNo: { type:DataTypes.STRING },
         jobId: { type:DataTypes.STRING },
         title:{ type:DataTypes.STRING },
+        customerRef:{ type:DataTypes.STRING },
+        fileNo:{ type:DataTypes.STRING },
         shipStatus:{ type:DataTypes.STRING },
         //vessel: { type:DataTypes.STRING },
         teu: { type:DataTypes.STRING },
